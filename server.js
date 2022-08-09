@@ -40,22 +40,22 @@ function firstQuestion(){
             message: "Would you like to?",
             choices: [
 
-                "View Employees by Department",
+                "Add Department",
                 "Add Employee",
                 "Remove Employees",
-                "Update Employee Role",
+                "View Departments",
+                "View Employees",
                 "Add Role",
-                "End"
+                "Quit"
             
             ]
         })
         .then(function({task}){
-            switch (task){
-                case "View Employees":
-                    viewEmployee();
+            switch (task.option){
+
+                case "Add Department":
+                    addDepartment();
                     break;
-                case "View Employees by Department":
-                    viewEmployeesbyDept();
 
                 case "Add Employee":
                         addEmployee();
@@ -63,16 +63,44 @@ function firstQuestion(){
                 case "Remove Employees":
                         removeEmployees();
                         break;
-                case "Update Employee Role":
+              
+                 case "View Daprtments":
+                        viewDepartments();
+                        break;
+
+                case "View Employees":
                         updateEmployeeRole();
                         break;
                 case "Add Role":
                         addRole();
                         break;
 
-                case "End":
-                        connection.end();
-                        break;
+                default:
+                    quit();
             }
         });
 };
+
+
+//Functions
+
+function addDepartment() {
+
+
+    inquirer.prompt({
+      
+        type: "input",
+        message: "Department Name?",
+        name: "deptName"
+
+    }).then(function(answer){
+
+
+
+        connection.query("INSERT INTO department (name) VALUES (?)", [answer.deptName] , function(err, res) {
+            if (err) throw err;
+            console.table(res)
+            firstQuestion()
+    });
+    });
+}
